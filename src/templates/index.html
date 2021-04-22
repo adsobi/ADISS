@@ -4,13 +4,102 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>ADISS</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script type="text/javascript" src="jquery.routes.js"></script>
     <link rel="stylesheet" href="./public/css/style.css">
 </head>
 <body>
-    <div>siemaneczko</div>
-    <div>{{name}}</div>
-    <button>Kliknij mnie!</button>
+    <h1 class="title">Most popular books genre</h1>
     <div id="json"></div>
+    <div>
+      <canvas id="myChart"></canvas>
+    </div>
+    <a href="#/page2">Page 2</a>
+    <hr />
+    <input type="button" id = "btnGenerate" value="Generate Table" />
+    <div id="dvTable">
+    </div>
+
+  <script type="text/javascript">
+  // tabelka z https://www.aspsnippets.com/Articles/Create-dynamic-HTML-Table-using-jQuery.aspx
+  // w zależności od tego jak wyciągniemy dane możemy je wyświetlić w taki sposob jak na stronie (z tabela customers) lub
+  // tak jak ja wyciągnęłam arr i headers 
+    const headers = ["Customer Id", "Name", "Country"];
+    const arr = [[1, "John Hammond", "United States"], [2, "Mudassar Khan", "India"], [3, "Suzanne Mathews", "France"], [4, "Robert Schidner", "Russia"]];
+  
+    $(function () {
+        $("#btnGenerate").click(function () {
+            //Build an array containing Customer records.
+            var customers = new Array();
+            customers.push(["Customer Id", "Name", "Country"]);
+            customers.push([1, "John Hammond", "United States"]);
+            customers.push([2, "Mudassar Khan", "India"]);
+            customers.push([3, "Suzanne Mathews", "France"]);
+            customers.push([4, "Robert Schidner", "Russia"]);
+      
+            //Create a HTML Table element.
+            var table = $("<table />");
+            table[0].border = "1";
+      
+            //Get the count of columns.
+            var columnCount = arr[0].length;
+      
+            //Add the header row.
+            var row = $(table[0].insertRow(-1));
+            for (var i = 0; i < columnCount; i++) {
+                var headerCell = $("<th />");
+                headerCell.html(headers[i]);
+                row.append(headerCell);
+            }
+      
+            //Add the data rows.
+            for (var i = 1; i < arr.length; i++) {
+                row = $(table[0].insertRow(-1));
+                for (var j = 0; j < columnCount; j++) {
+                    var cell = $("<td />");
+                    cell.html(arr[i][j]);
+                    row.append(cell);
+                }
+            }
+      
+            var dvTable = $("#dvTable");
+            dvTable.html("");
+            dvTable.append(table);
+        });
+    });
+    </script>
+    
+    <script>
+      // === include 'setup' then 'config' above ===
+      const labels = [
+        'January',
+        'February',
+        'March',
+        'April',
+        'May',
+        'June',
+      ];
+      const data = {
+        labels: labels,
+        datasets: [{
+          label: 'Most popular books genre',
+          backgroundColor: 'rgb(255, 99, 132)',
+          borderColor: 'rgb(255, 99, 132)',
+          data: [0, 10, 5, 2, 20, 30, 45],
+        }]
+      };
+      const config = {
+        type: 'bar',
+        data,
+        options: {}
+      };
+    
+      var myChart = new Chart(
+        document.getElementById('myChart'),
+        config
+      );
+    </script>
 
     <script type="text/javascript" src="./public/js/jquery-3.6.0.min.js"></script>
     <script type="text/javascript" src="./public/js/main.js"></script>

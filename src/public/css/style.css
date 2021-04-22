@@ -1,3 +1,14 @@
-div {
-    color: red;
+body {
+    font: system-ui;
+
+}
+
+.title {
+    text-align: center;
+    font: system-ui;
+}
+
+canvas {
+    width: 80% !important;
+    margin: auto;
 }
