@@ -1,6 +1,5 @@
 body {
     font: system-ui;
-
 }
 
 .title {
@@ -11,4 +10,8 @@ body {
 canvas {
     width: 80% !important;
     margin: auto;
+}
+
+table {
+    margin: 5% auto;
 }

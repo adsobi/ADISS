@@ -11,10 +11,26 @@ def index():
     dataFromSPARQL = sparql.test() 
     return render_template('index.html', name=dataFromSPARQL)
 
+@app.route('/page2')
+def page2():
+    return render_template('page2.html')
+
 #example method if we will use ajax
 @app.route('/:api/getData', methods=['GET'])
 def data():
     return jsonify({"data": sparql.anotherTest()})
+
+@app.route('/:api/getTable', methods=['GET'])
+def table():
+    return jsonify({"table": sparql.generateData()})
+
+@app.route('/:api/getChart', methods=['GET'])
+def chart():
+    return jsonify({"chart": sparql.generateChart()})
+
+@app.route('/:api/getDoughnutChart', methods=['GET'])
+def doughnutChart():
+    return jsonify({"chart": sparql.generateChart()})
 
 @app.errorhandler(404)
 def handle_404(e):
