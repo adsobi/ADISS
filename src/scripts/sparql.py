@@ -19,16 +19,15 @@ def generateData():
         },
         2: {
             "customerId": 236,
-            "name": "ZOSIA",
-            "country": "ZOSIA",
+            "name": "ADRIAN",
+            "country": "GRZEGORZ",
         },
         3: {
             "customerId": 246,
-            "name": "ZOSIA",
+            "name": "HUBERT",
             "country": "ZOSIA",
         },
     }
-
 
 def generateGenreChart():
     sparql = SPARQLWrapper("http://dbpedia.org/sparql")

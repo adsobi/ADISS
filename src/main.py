@@ -10,9 +10,9 @@ app.config['DEBUG'] = True
 def index():
     return render_template('index.html', genres=sparql.generateGenreChart())
 
-@app.route('/page2')
-def page2():
-    return render_template('page2.html')
+@app.route('/country/<name>')
+def country(name):
+    return render_template('country.html', countries=sparql.generateCountryOfOriginChart(name))
 
 @app.route('/genre/<name>')
 def getGenre(name):
