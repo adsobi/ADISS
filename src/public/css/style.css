@@ -34,3 +34,27 @@ th {
 th a {
     color: aliceblue;
 }
+
+#container {
+    display: flex;
+    flex-flow: norap
+}
+
+#navbar {
+    padding: 10px 0 10px 0;
+    width: 15%;
+    background-color: rgb(54, 162, 235);
+    border-radius: 15px; 
+    /* 0px 15px 15px 0px; */
+}
+
+#content {
+    width: 100%;
+}
+.link-to-data {
+    color: black
+}
+
+li {
+   margin-left: 15px;
+}

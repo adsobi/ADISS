@@ -46,12 +46,12 @@ $(document).ready(()=>{
 
 
     // const data = {
-    //     labels: Object.keys(genre),
+    //     labels: Object.keys(genres),
     //     datasets: [{
-    //         label: 'Most popular books genre',
+    //         label: 'Most popular books genres',
     //         backgroundColor: 'rgb(69, 103, 226)',
     //         borderColor: 'rgb(255, 99, 132)',
-    //         data: Object.values(genre),
+    //         data: Object.values(genres),
     //     }]
     // };
 
@@ -62,17 +62,17 @@ $(document).ready(()=>{
     // };
     // new Chart(document.getElementById('myChart'), config);
 
-    //genre was declared in index.html as value returned from flask
+    //genres was declared in index.html as value returned from flask
     const data = {
-        labels: Object.keys(genre),
+        labels: Object.keys(genres),
         datasets: [{
-            label: 'Most popular books genre',
+            label: 'Most popular books genres',
             backgroundColor: [
                 'rgb(255, 99, 132)',
                 'rgb(54, 162, 235)',
                 'rgb(255, 205, 86)'
             ],
-            data: Object.values(genre),
+            data: Object.values(genres),
         }]
     };
 
@@ -82,9 +82,9 @@ $(document).ready(()=>{
         options: {
             'onClick': function(evt, item){
                 let indexOfElem = item[0].index;
-                let nameOfElem = Object.keys(genre)[indexOfElem];
+                let nameOfElem = Object.keys(genres)[indexOfElem];
                 alert(nameOfElem);
-                window.location.href=(`/genre/${nameOfElem}`);
+                window.location.href=(`/genres/${nameOfElem}`);
             }
         }
     };

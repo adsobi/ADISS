@@ -8,7 +8,7 @@ app.config['DEBUG'] = True
 #main page
 @app.route('/')
 def index():
-    return render_template('index.html', genre=sparql.generateGenreChart())
+    return render_template('index.html', genres=sparql.generateGenreChart())
 
 @app.route('/page2')
 def page2():
