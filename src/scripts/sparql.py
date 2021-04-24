@@ -90,6 +90,39 @@ def generateGenreChart():
     result = sparql.query().convert()
     RET = {}
     for hit in result["results"]["bindings"]:
-        # We want the "value" attribute of the "comment" field
         RET[hit["GENRE"]["value"]] = hit["BOOKS"]["value"]
+    return RET
+
+
+def generateCountryOfOriginChart(param):
+    sparql = SPARQLWrapper("http://dbpedia.org/sparql")
+    sparql.setQuery("""
+        PREFIX owl: <http://www.w3.org/2002/07/owl#>
+        PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+        PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+        PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+        PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+        PREFIX dc: <http://purl.org/dc/elements/1.1/>
+        PREFIX : <http://dbpedia.org/resource/>
+        PREFIX dbpedia2: <http://dbpedia.org/property/>
+        PREFIX dbpedia: <http://dbpedia.org/>
+        PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+        SELECT  ?out ?national (COUNT (?book) as ?BOOKS )  WHERE
+        { ?book a  <http://schema.org/Book> .
+         ?book <http://dbpedia.org/property/genre> ?genre .
+            FILTER(LANGMATCHES(LANG(?genre), 'en'))
+            ?genre bif:contains \""""+param+"""\" .
+            ?book  <http://dbpedia.org/property/author> ?author .
+            ?author <http://dbpedia.org/property/nationality> ?nationality .
+            OPTIONAL{?nationality foaf:name ?national .} .
+            BIND(IF(exists{?nationality foaf:name ?national},
+            ?national,?nationality) AS ?out)
+
+        }ORDER BY DESC (?BOOKS)LIMIT 10
+    """)
+    sparql.setReturnFormat(JSON)
+    result = sparql.query().convert()
+    RET = {}
+    for hit in result["results"]['bindings']:
+        RET[hit["out"]["value"]] = hit["BOOKS"]["value"]
     return RET
