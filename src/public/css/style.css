@@ -1,17 +1,36 @@
 body {
-    font: system-ui;
+    font-family: system-ui;
+    background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+    background-size: 400% 400%;
+    animation: gradient 15s ease infinite;
 }
 
 .title {
     text-align: center;
-    font: system-ui;
+    margin: 30px auto;
 }
 
-canvas {
+#myChart {
     width: 80% !important;
     margin: auto;
 }
 
-table {
-    margin: 5% auto;
+#myDoughnutChart {
+    width: 40% !important;
+    height: 40% !important;
+    margin: auto;
+}
+
+.table {
+    margin: 5% auto !important;
+    width: 90% !important;
+    text-align: center;
+}
+
+th {
+    background: black;
+}
+
+th a {
+    color: aliceblue;
 }

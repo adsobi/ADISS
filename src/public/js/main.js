@@ -7,7 +7,7 @@ $.ajax({
     url: ":api/getTable",
     success: (result)=>{
         arr = Object.values(result.table);
-        var table = $("<table />");
+        var table = $("<table class='table' />");
         table[0].border = "1";
 
 //Get the count of columns.
@@ -16,7 +16,7 @@ var columnCount = headers.length;
 //Add the header row.
 var row = $(table[0].insertRow(-1));
 for (var i = 0; i < columnCount; i++) {
-    var headerCell = $('<th/>');
+    var headerCell = $('<th scope="col" />');
     headerCell.html(`<a href=${headersLinks[i]}>${headers[i]}</a>`);
     row.append(headerCell);
 }
