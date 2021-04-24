@@ -5,44 +5,44 @@ const headersLinks = ["/page2", "/page3", "/page2"];
 $(document).ready(()=>{
 
     let arr = [];
-    $.ajax({
-        url: ":api/getTable",
-        success: (result)=>{
-            arr = Object.values(result.table);
-            var table = $("<table class='table' />");
-            table[0].border = "1";
+    // $.ajax({
+    //     url: ":api/getTable",
+    //     success: (result)=>{
+    //         arr = Object.values(result.table);
+    //         var table = $("<table class='table' />");
+    //         table[0].border = "1";
 
-    //Get the count of columns.
-    var columnCount = headers.length;
+    // //Get the count of columns.
+    // var columnCount = headers.length;
 
-    //Add the header row.
-    var row = $(table[0].insertRow(-1));
-    for (var i = 0; i < columnCount; i++) {
-        var headerCell = $('<th scope="col" />');
-        headerCell.html(`<a href=${headersLinks[i]}>${headers[i]}</a>`);
-        row.append(headerCell);
-    }
+    // //Add the header row.
+    // var row = $(table[0].insertRow(-1));
+    // for (var i = 0; i < columnCount; i++) {
+    //     var headerCell = $('<th scope="col" />');
+    //     headerCell.html(`<a href=${headersLinks[i]}>${headers[i]}</a>`);
+    //     row.append(headerCell);
+    // }
 
-    //Add the data rows.
-    for (var i = 0; i < arr.length; i++) {
-        row = $(table[0].insertRow(-1));
-        var rowData = Object.values(arr[i]);
+    // //Add the data rows.
+    // for (var i = 0; i < arr.length; i++) {
+    //     row = $(table[0].insertRow(-1));
+    //     var rowData = Object.values(arr[i]);
 
-        for (var j = 0; j < columnCount; j++) {
-            var cell = $("<td />");
-            cell.html(rowData[j]);
-            row.append(cell);
-        }
-    }
+    //     for (var j = 0; j < columnCount; j++) {
+    //         var cell = $("<td />");
+    //         cell.html(rowData[j]);
+    //         row.append(cell);
+    //     }
+    // }
 
-    var dvTable = $("#dvTable");
-        dvTable.html("");
-        dvTable.append(table);
-        },
-        error: (result)=>{
-            console.log(result);
-        }
-    });
+    // var dvTable = $("#dvTable");
+    //     dvTable.html("");
+    //     dvTable.append(table);
+    //     },
+    //     error: (result)=>{
+    //         console.log(result);
+    //     }
+    // });
 
 
     // const data = {
