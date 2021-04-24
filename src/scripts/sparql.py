@@ -25,11 +25,11 @@ def generateData():
         },
     }
 
-def generateChart():
+def generateGenreChart():
     return {
-        'Jan': 10,
-        'Feb': 5,
-        'Mar': 20,
-        'April': 10,
-        'May': 40,
+        "Jan": 10,
+        "Feb": 5,
+        "Mar": 20,
+        "April": 10,
+        "May": 40,
     }

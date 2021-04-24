@@ -8,11 +8,14 @@ app.config['DEBUG'] = True
 #main page
 @app.route('/')
 def index():
-    dataFromSPARQL = sparql.test() 
-    return render_template('index.html', name=dataFromSPARQL)
+    return render_template('index.html', genre=sparql.generateGenreChart())
 
 @app.route('/page2')
 def page2():
+    return render_template('page2.html')
+
+@app.route('/genre/<name>')
+def getGenre(name):
     return render_template('page2.html')
 
 #example method if we will use ajax
@@ -30,8 +33,9 @@ def chart():
 
 @app.route('/:api/getDoughnutChart', methods=['GET'])
 def doughnutChart():
-    return jsonify({"chart": sparql.generateChart()})
+    return jsonify({"chart": sparql.generateGenreChart()})
 
+#page loa
 @app.errorhandler(404)
 def handle_404(e):
     return 'Kochany przybyszu, nie ma takiej strony :('
