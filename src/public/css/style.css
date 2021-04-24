@@ -35,10 +35,22 @@ body {
 
 th {
     background: black;
+    color: aliceblue;
 }
 
 th a {
     color: aliceblue;
+}
+
+td a {
+    font-weight: bold;
+    color: aliceblue;
+}
+
+
+td a:hover {
+    font-weight: bold;
+    color: rgb(197, 202, 207);
 }
 
 #container {
