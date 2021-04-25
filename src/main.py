@@ -10,7 +10,10 @@ app.config['DEBUG'] = True
 
 @app.route('/')
 def index():
-    return render_template('index.html', genres=sparql.generateGenreChart())
+    return render_template('index.html', 
+                            genres=sparql.generateGenreChart(),
+                            authors=sparql.generateListOfAllAuthors())
+                            # countries=jsonify("data": sparql.generateCountryOfOriginChart))
 
 @app.route('/countries')
 def countries():
@@ -22,8 +25,13 @@ def authors():
 
 @app.route('/country/<name>')
 def country(name):
-    return render_template('page2.html')
+    return render_template('country.html',
+                            country="List of authors and num of book in selected country")
 
+@app.route('/author/<name>')
+def author(name):
+    return render_template('author.html',
+                            author="List of books selectd author and info about him")
 
 @app.route('/genre/<name>')
 def getGenre(name):
