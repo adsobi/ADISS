@@ -26,17 +26,31 @@
             <h1 class="title">The most popular books genre</h1>
             <canvas id="myDoughnutChart"></canvas>
             <div id="buttons">
-                <div class="forms">
+                <div class="form-container">
                     <form action="/authors">
                         <button type="submit" class="btn btn-secondary">List of authors</button>
                     </form>
-                    <input class="form-control" type="text" placeholder="Search authors">
-                </div>
-                <div class="forms">
-                    <form action="/countries">
-                        <button type="submit" class="btn btn-secondary">List of counries</button>
+                    <form autocomplete="off" action="">
+                        
+                        <div class="autocomplete">  
+                            <input class="form-control" id="author" type="text" placeholder="Search author">
+                        </div>
+                        <input class="btn btn-primary" id="submit-author" type="submit">
+                        
                     </form>
-                    <input class="form-control" type="text" placeholder="Search countries">
+                </div>
+                <div class="form-container">
+                    <form action="/countries">
+                        <button type="submit" class="btn btn-secondary">List of countries</button>
+                    </form>
+                    <form autocomplete="off" action="">
+                        
+                        <div class="autocomplete">  
+                            <input class="form-control" id="country" type="text" placeholder="Search country">
+                        </div>
+                        <input class="btn btn-primary" id="submit-country" type="submit">
+                        
+                    </form>
                 </div>
             </div>
         </div>
