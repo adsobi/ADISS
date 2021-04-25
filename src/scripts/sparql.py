@@ -1,5 +1,7 @@
 # This is place for SPARQL methods
+import json
 from SPARQLWrapper import SPARQLWrapper, JSON
+#from pprint import pprint  #for debug, remember to pip install pprint if not installed
 
 
 def test():
@@ -28,6 +30,7 @@ def generateData():
             "country": "ZOSIA",
         },
     }
+
 
 def generateGenreChart():
     sparql = SPARQLWrapper("http://dbpedia.org/sparql")
@@ -88,11 +91,12 @@ def generateGenreChart():
     """)
     sparql.setReturnFormat(JSON)
     result = sparql.query().convert()
+    pprint(result)
     RET = {}
     for hit in result["results"]["bindings"]:
         RET[hit["GENRE"]["value"]] = hit["BOOKS"]["value"]
     return RET
-
+#generateGenreChart()
 
 def generateCountryOfOriginChart(param):
     sparql = SPARQLWrapper("http://dbpedia.org/sparql")
@@ -111,7 +115,7 @@ def generateCountryOfOriginChart(param):
         { ?book a  <http://schema.org/Book> .
          ?book <http://dbpedia.org/property/genre> ?genre .
             FILTER(LANGMATCHES(LANG(?genre), 'en'))
-            ?genre bif:contains \""""+param+"""\" .
+            ?genre bif:contains \"""" + param + """\" .
             ?book  <http://dbpedia.org/property/author> ?author .
             ?author <http://dbpedia.org/property/nationality> ?nationality .
             OPTIONAL{?nationality foaf:name ?national .} .
@@ -126,3 +130,112 @@ def generateCountryOfOriginChart(param):
     for hit in result["results"]['bindings']:
         RET[hit["out"]["value"]] = hit["BOOKS"]["value"]
     return RET
+
+
+def generateListOfAllAuthors():
+    #gets you 1 column full of authors
+    sparql = SPARQLWrapper("http://dbpedia.org/sparql")
+    sparql.setQuery("""
+            select distinct ?author
+            where {
+            ?book rdf:type <http://schema.org/Book>;
+            <http://dbpedia.org/ontology/author> ?author
+            }
+        """)
+    sparql.setReturnFormat(JSON)
+    result = sparql.query().convert()
+    RET = []
+    for hit in result["results"]["bindings"]:
+        tmp = hit["author"]["value"]
+        tmp = tmp.replace("http://dbpedia.org/resource/","")
+        tmp = tmp.replace("_"," ")
+        RET.append(tmp)
+    mySet = set(RET)
+    return mySet
+
+#pprint(generateListOfAllAuthors())
+
+def findBookOfAuthor(author):
+    author = author.replace(" ", "_")
+    sparql = SPARQLWrapper("http://dbpedia.org/sparql")
+    query = """
+            select ?author ?book(group_concat(?genre;
+            SEPARATOR = ", ") as ?genres)
+            where
+            {
+            ?book
+            rdf:type<http://schema.org/Book>;
+            <http://dbpedia.org/property/genre> ?genre;
+            <http://dbpedia.org/ontology/author> ?author.FILTER
+            regex(?author, "insertNameHere")
+            } group
+            by ?book ?author
+        """
+    query = query.replace("insertNameHere", author)
+    sparql.setQuery(query)
+    sparql.setReturnFormat(JSON)
+    result = sparql.query().convert()
+    RET = {}
+    for hit in result["results"]['bindings']:
+        title = hit["book"]["value"]
+        title = title.replace("http://dbpedia.org/resource/","")
+        title = title.replace("_"," ")
+        genreList = hit["genres"]["value"]
+        genreList = genreList.replace("http://dbpedia.org/resource/", "")
+        genreList = genreList.replace("_", " ")
+        RET[title] = genreList
+    return result
+
+#findBookOfAuthor("Lemony Snicket")
+
+def getListOfCountriesAndNumberOfBooks():
+    #gets you 2 columns: countries and total number of books from there
+    sparql = SPARQLWrapper("http://dbpedia.org/sparql")
+    query = """
+    select ?country count(?country) as ?numberOfBooks
+    where {
+    ?book rdf:type <http://schema.org/Book>;
+    <http://dbpedia.org/property/country> ?country .
+    FILTER(LANGMATCHES(LANG(?country), 'en'))
+    OPTIONAL{?country foaf:name ?commonName.} .
+        BIND(IF(exists{?country foaf:name ?commonName},
+        ?commonName,?country) AS ?out)
+    } group by ?country
+    """
+    sparql.setQuery(query)
+    sparql.setReturnFormat(JSON)
+    result = sparql.query().convert()
+    RET = {}
+    for hit in result["results"]['bindings']:
+        country = hit["country"]["value"]
+        numb = hit["numberOfBooks"]["value"]
+        RET[country] = numb
+    return RET
+
+#pprint(getListOfCountriesAndNumberOfBooks())
+
+def getAuthorsAndNumberOfTheirBooks():
+    #gets you 2 columns: author and total number of their books
+
+    sparql = SPARQLWrapper("http://dbpedia.org/sparql")
+    query = """
+            select ?author count(?book) as ?numberOfBooks
+            where{
+            ?book rdf:type<http://schema.org/Book>;
+            <http://dbpedia.org/property/genre> ?genre;
+            <http://dbpedia.org/ontology/author> ?author
+            } group by ?author
+        """
+    sparql.setQuery(query)
+    sparql.setReturnFormat(JSON)
+    result = sparql.query().convert()
+    RET = {}
+    for hit in result["results"]['bindings']:
+        author = hit["author"]["value"]
+        author = author.replace("http://dbpedia.org/resource/","")
+        author = author.replace("_", " ")
+        numb = hit["numberOfBooks"]["value"]
+        RET[author] = numb
+    return RET
+
+#pprint(getAuthorsAndNumberOfTheirBooks())
