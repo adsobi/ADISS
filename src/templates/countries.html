@@ -7,26 +7,12 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="../public/css/style.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-    <script>
-        const countries = JSON.parse('{{ countries | tojson | safe }}');
-    </script>
 </head>
 <body>
     <div id="container">
-        <div id="navbar">
-            <table>
-            {% for country in countries %}
-                <li>
-                    <a class="link-to-data" href='../country/{{country}}'>{{ country }}</a>
-                </li>
-            {% endfor %}
-            </table>
-        </div>
         <div id="content">
-            <h1 class="title">Where this genre is the most popular?</h1>
-            <canvas id="myChart"></canvas>
-            <hr />
-            <div id="dvTable">
+            <h1 class="title">List of all countries and amount of books</h1>
+            <div id="countriesTable">
             </div>
         </div>
     </div>
@@ -34,6 +20,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
     <script type="text/javascript" src="../public/js/jquery-3.6.0.min.js"></script>
-    <script type="text/javascript" src="../public/js/country.js"></script>
+    <script type="text/javascript" src="../public/js/countries.js"></script>
 </body>
 </html>

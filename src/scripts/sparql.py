@@ -211,7 +211,7 @@ def getListOfCountriesAndNumberOfBooks():
         RET[country] = numb
     return RET
 
-#pprint(getListOfCountriesAndNumberOfBooks())
+# pprint(getListOfCountriesAndNumberOfBooks())
 
 def getAuthorsAndNumberOfTheirBooks():
     #gets you 2 columns: author and total number of their books
@@ -238,3 +238,32 @@ def getAuthorsAndNumberOfTheirBooks():
     return RET
 
 #pprint(getAuthorsAndNumberOfTheirBooks())
+
+def getListOfCountriesAndNumberOfBooksInGenre(desiredGenre):
+    #gets you 2 columns: countries and total number of books from there
+    sparql = SPARQLWrapper("http://dbpedia.org/sparql")
+    query = """
+    select ?country count(?country) as ?numberOfBooks
+    where {
+    ?book rdf:type <http://schema.org/Book>;
+    <http://dbpedia.org/property/country> ?country;
+    <http://dbpedia.org/property/genre> ?genre.FILTER
+     regex(?genre, "insertGenreHere","i") . 
+    FILTER(LANGMATCHES(LANG(?country), 'en'))
+    OPTIONAL{?country foaf:name ?commonName.} .
+        BIND(IF(exists{?country foaf:name ?commonName},
+        ?commonName,?country) AS ?out)
+    } group by ?country
+    """
+    query = query.replace("insertGenreHere",desiredGenre)
+    sparql.setQuery(query)
+    sparql.setReturnFormat(JSON)
+    result = sparql.query().convert()
+    RET = {}
+    for hit in result["results"]['bindings']:
+        country = hit["country"]["value"]
+        numb = hit["numberOfBooks"]["value"]
+        RET[country] = numb
+    return RET
+
+    #pprint(getListOfCountriesAndNumberOfBooksInGenre("comedy"))

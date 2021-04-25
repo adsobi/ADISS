@@ -47,6 +47,9 @@ td a {
     color: aliceblue;
 }
 
+a {
+    color: white !important;
+}
 
 td a:hover {
     font-weight: bold;
@@ -160,4 +163,12 @@ input[type=submit] {
 label{
     color: red;
     font-weight: bold;
+}
+
+#countriesTable th {
+    width: 50%;
+}
+
+#genreTable th {
+    width: 50%;
 }

@@ -7,7 +7,6 @@ app.config['DEBUG'] = True
 
 # main page
 
-
 @app.route('/')
 def index():
     return render_template('index.html', 
@@ -35,8 +34,10 @@ def author(name):
 
 @app.route('/genre/<name>')
 def getGenre(name):
-    return render_template('country.html',
-                           countries=sparql.generateCountryOfOriginChart(name))
+    return render_template('genre.html',
+                           countries=sparql.generateCountryOfOriginChart(name),
+                           name=name,
+                           list=sparql.getListOfCountriesAndNumberOfBooksInGenre(name))
 
 # example method if we will use ajax
 
@@ -56,9 +57,10 @@ def chart():
     return jsonify({"chart": sparql.generateChart()})
 
 
-@app.route('/:api/getDoughnutChart', methods=['GET'])
-def doughnutChart():
-    return jsonify({"chart": sparql.generateGenreChart()})
+@app.route('/:api/getListOfCountriesAndNumberOfBooks', methods=['GET'])
+def countriesList():
+    return jsonify({"list": sparql.getListOfCountriesAndNumberOfBooks()})
+
 
 # page loa
 
