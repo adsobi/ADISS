@@ -183,6 +183,7 @@ def findBookOfAuthor(author):
         genreList = genreList.replace("http://dbpedia.org/resource/", "")
         genreList = genreList.replace("_", " ")
         RET[title] = genreList
+    pprint(result)
     return result
 
 #findBookOfAuthor("Lemony Snicket")

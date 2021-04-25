@@ -30,8 +30,10 @@ def country(name):
 
 @app.route('/author/<name>')
 def author(name):
+    print(name)
     return render_template('author.html',
-                            author="List of books selectd author and info about him")
+                            author=sparql.findBookOfAuthor(name.replace(" ", "_")),
+                            name=name)
 
 @app.route('/genre/<name>')
 def getGenre(name):
