@@ -1,7 +1,7 @@
 # This is place for SPARQL methods
 import json
 from SPARQLWrapper import SPARQLWrapper, JSON
-from pprint import pprint  #for debug, remember to pip install pprint if not installed
+#from pprint import pprint  #for debug, remember to pip install pprint if not installed
 
 
 def test():
@@ -266,4 +266,102 @@ def getListOfCountriesAndNumberOfBooksInGenre(desiredGenre):
         RET[country] = numb
     return RET
 
-    #pprint(getListOfCountriesAndNumberOfBooksInGenre("comedy"))
+#pprint(getListOfCountriesAndNumberOfBooksInGenre("comedy"))
+
+def getListOfAuthorsAndTheirAbstracts():
+    # gets you 2 columns: authors and their abstracts
+    sparql = SPARQLWrapper("http://dbpedia.org/sparql")
+    query = """
+            select ?author (count(?book) as ?numberOfBooks) ?abstract
+            where{
+            ?book a <http://schema.org/Book> .
+            ?book <http://dbpedia.org/property/author> ?author .
+            ?author <http://dbpedia.org/ontology/abstract> ?abstract . 
+            FILTER(LANGMATCHES(LANG(?abstract), 'en'))
+            } group by ?author ?abstract
+        """
+    sparql.setQuery(query)
+    sparql.setReturnFormat(JSON)
+    result = sparql.query().convert()
+    RET = {}
+    for hit in result["results"]['bindings']:
+        author = hit["author"]["value"]
+        author = author.replace("http://dbpedia.org/resource/","")
+        author = author.replace("_"," ")
+        author = author.replace("@en", "")
+        abstract = hit["abstract"]["value"]
+        abstract = abstract.replace("@en", "")
+        RET[author] = abstract
+    return RET
+
+#pprint(getListOfAuthorsAndTheirAbstracts())
+
+def juzZapomnialemCoTaFunkcjaRobiMozeszZastapicTaNazweAleSzczerzeMamToGdzies(origin):
+    origin = origin.replace(" ","_")
+    sparql = SPARQLWrapper("http://dbpedia.org/sparql")
+    query = """
+        select distinct ?out ?name
+        where {
+        ?book a <http://schema.org/Book> .
+        ?book <http://dbpedia.org/property/country> ?country .
+        FILTER(LANGMATCHES(LANG(?country), 'en')) . 
+        ?country bif:contains "insertNameHere" .
+        ?book <http://dbpedia.org/property/name> ?name .
+        ?book <http://dbpedia.org/property/author> ?author .
+        optional {?author foaf:name ?aname . } .
+        bind (if (exists {?author foaf:name ?aname . }, ?aname, ?author) as ?out)}
+    """
+    query = query.replace("insertNameHere", origin)
+    sparql.setQuery(query)
+    sparql.setReturnFormat(JSON)
+    result = sparql.query().convert()
+    RET = {}
+    for hit in result["results"]['bindings']:
+        author = hit["name"]["value"]
+        author = author.replace("http://dbpedia.org/resource/", "")
+        author = author.replace("_", " ")
+        author = author.replace("@en", "")
+        abstract = hit["out"]["value"]
+        abstract = abstract.replace("@en", "")
+        abstract = abstract.replace("http://dbpedia.org/resource/", "")
+        RET[author] = abstract
+    return RET
+#pprint(juzZapomnialemCoTaFunkcjaRobiMozeszZastapicTaNazweAleSzczerzeMamToGdzies("United States"))
+
+"""
+select ?author (count(?book) as ?numberOfBooks) ?abstract
+            where{
+            ?book a <http://schema.org/Book> .
+            ?book <http://dbpedia.org/property/author> ?author .
+            ?author <http://dbpedia.org/ontology/abstract> ?abstract . 
+            FILTER(LANGMATCHES(LANG(?abstract), 'en'))
+            } group by ?author ?abstract
+"""
+
+"""
+select distinct ?out ?name
+    where {
+    ?book a <http://schema.org/Book> .
+    ?book <http://dbpedia.org/property/country> ?country .
+    FILTER(LANGMATCHES(LANG(?country), 'en')) . 
+    ?country bif:contains "United_States" .
+    ?book <http://dbpedia.org/property/name> ?name .
+    ?book <http://dbpedia.org/property/author> ?author .
+    optional {?author foaf:name ?aname . } .
+    bind (if (exists {?author foaf:name ?aname . }, ?aname, ?author) as ?out)
+    }
+    """
+
+"""
+select distinct ?out ?name
+    where {
+    ?book a <http://schema.org/Book> .
+    ?book <http://dbpedia.org/property/country> ?country .
+    FILTER(LANGMATCHES(LANG(?country), 'en')) . 
+    ?country bif:contains "United_States" .
+    ?book <http://dbpedia.org/property/name> ?name .
+    ?book <http://dbpedia.org/property/author> ?author .
+    optional {?author foaf:name ?aname . } .
+    bind (if (exists {?author foaf:name ?aname . }, ?aname, ?author) as ?out)
+    }
+"""
