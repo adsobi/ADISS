@@ -91,7 +91,7 @@ def generateGenreChart():
     """)
     sparql.setReturnFormat(JSON)
     result = sparql.query().convert()
-    pprint(result)
+    #pprint(result)
     RET = {}
     for hit in result["results"]["bindings"]:
         RET[hit["GENRE"]["value"]] = hit["BOOKS"]["value"]
@@ -296,7 +296,7 @@ def getListOfAuthorsAndTheirAbstracts():
 
 #pprint(getListOfAuthorsAndTheirAbstracts())
 
-def juzZapomnialemCoTaFunkcjaRobiMozeszZastapicTaNazweAleSzczerzeMamToGdzies(origin):
+def getAllBooksWithAuthorForCountry(origin):
     origin = origin.replace(" ","_")
     sparql = SPARQLWrapper("http://dbpedia.org/sparql")
     query = """
@@ -326,7 +326,7 @@ def juzZapomnialemCoTaFunkcjaRobiMozeszZastapicTaNazweAleSzczerzeMamToGdzies(ori
         abstract = abstract.replace("http://dbpedia.org/resource/", "")
         RET[author] = abstract
     return RET
-#pprint(juzZapomnialemCoTaFunkcjaRobiMozeszZastapicTaNazweAleSzczerzeMamToGdzies("United States"))
+#pprint(getAllBooksWithAuthorForCountry("United States"))
 
 """
 select ?author (count(?book) as ?numberOfBooks) ?abstract

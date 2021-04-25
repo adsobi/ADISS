@@ -25,7 +25,8 @@ def authors():
 @app.route('/country/<name>')
 def country(name):
     return render_template('country.html',
-                            country="List of authors and num of book in selected country")
+                            country=name,
+                            list=sparql.getAllBooksWithAuthorForCountry(name))
 
 @app.route('/author/<name>')
 def author(name):
