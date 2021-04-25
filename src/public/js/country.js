@@ -22,46 +22,46 @@ $(document).ready(()=>{
 
     let arr = [];
     $.ajax({
-        url: ":api/getTable",
+        url: "../:api/getTable",
         success: (result)=>{
             arr = Object.values(result.table);
-var table = $("<table class='table' />");
-table[0].border = "1";
+        var table = $("<table class='table' />");
+        table[0].border = "1";
 
-//Get the count of columns.
-var columnCount = headers.length;
+        //Get the count of columns.
+        var columnCount = headers.length;
 
-//Add the header row.
-var row = $(table[0].insertRow(-1));
-for (var i = 0; i < columnCount; i++) {
-    var headerCell = $('<th scope="col" />');
-    headerCell.html(headers[i]);
-    // headerCell.html(`<a href=${headersLinks[i]}>${headers[i]}</a>`);
-    row.append(headerCell);
-}
+        //Add the header row.
+        var row = $(table[0].insertRow(-1));
+        for (var i = 0; i < columnCount; i++) {
+            var headerCell = $('<th scope="col" />');
+            headerCell.html(headers[i]);
+            // headerCell.html(`<a href=${headersLinks[i]}>${headers[i]}</a>`);
+            row.append(headerCell);
+        }
 
-//Add the data rows.
-for (var i = 0; i < arr.length; i++) {
-    row = $(table[0].insertRow(-1));
-    var rowData = Object.values(arr[i]);
+        //Add the data rows.
+        for (var i = 0; i < arr.length; i++) {
+            row = $(table[0].insertRow(-1));
+            var rowData = Object.values(arr[i]);
 
-    for (var j = 0; j < columnCount - 1; j++) {
-        var cell = $("<td />");
-        cell.html(rowData[j]);
-        row.append(cell);
-    }
+            for (var j = 0; j < columnCount - 1; j++) {
+                var cell = $("<td />");
+                cell.html(rowData[j]);
+                row.append(cell);
+            }
 
-    var authorCell = $("<td />");
-    authorCell.html(`<a href='/authors/${rowData[j]}'>${rowData[j]}</a>`);
-    row.append(authorCell);    
-}
+            var authorCell = $("<td />");
+            authorCell.html(`<a href='/authors/${rowData[j]}'>${rowData[j]}</a>`);
+            row.append(authorCell);    
+        }
 
-var dvTable = $("#dvTable");
-    dvTable.html("");
-    dvTable.append(table);
-},
-error: (result)=>{
-    console.log(result);
-}
-});
+        var dvTable = $("#dvTable");
+            dvTable.html("");
+            dvTable.append(table);
+        },
+        error: (result)=>{
+            console.log(result);
+        }
+    });
 })
