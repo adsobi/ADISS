@@ -1,12 +1,5 @@
 $(document).ready(()=>{
-    document.querySelectorAll(".country-link").forEach((item)=>{
-        item.addEventListener('click',(event)=>{
-            event.preventDefault();
-            console.log(item.innerHTML);
-            window.location.href=`../author/${item.innerHTML}`
-        })
-    })
-
+   
     function autocomplete(inp, arr) {
         /*the autocomplete function takes two arguments,
         the text field element and an array of possible autocompleted values:*/
@@ -118,51 +111,21 @@ $(document).ready(()=>{
         return string.charAt(0).toUpperCase() + string.slice(1);
     }
 
-    document.querySelector("#submit-country").addEventListener("click", (event)=>{
+    document.querySelector("#submit-author").addEventListener("click", (event)=>{
     
-        const inp = document.getElementById("country"),
+        const inp = document.getElementById("author"),
               inpValue = capitalizeFirstLetter(inp.value);
-        inp.form.action=`../country/${inpValue}`;
-        if(countries.indexOf(inpValue) === -1){
+        inp.form.action=`../author/${inpValue}`;
+        if(authors.indexOf(inpValue) === -1){
             event.preventDefault();
             if(inp.parentNode.getElementsByTagName('label').length === 0){
                 let label = document.createElement('label');
                 label.setAttribute("for", inp.id);
-                label.innerText="Wrong country name!";
+                label.innerText="Wrong author name!";
                 inp.parentNode.insertBefore(label, inp.nextSibling);
             }
         }
     }, false);
 
-    autocomplete(document.getElementById("country"), countries);
-})
-
-// const headers = ["Book title", "Author"];
-
-// arr = Object.entries(list);
-// var table = $("<table class='table' />");
-// table[0].border = "1";
-
-// var columnCount = headers.length;
-
-// var row = $(table[0].insertRow(-1));
-// for (var i = 0; i < columnCount; i++) {
-//     var headerCell = $('<th scope="col" />');
-//     headerCell.html(headers[i]);
-//     row.append(headerCell);
-// }
-
-// for (var i = 1; i < arr.length; i++) {
-//     row = $(table[0].insertRow(-1));
-//     var rowData = Object.values(arr[i]);
-
-//     for (var j = 0; j < columnCount; j++) {
-//         var cell = $("<td />");
-//         cell.html(rowData[j]);
-//         row.append(cell);
-//     }
-// }
-
-// var dvTable = $("#booksTable");
-//     dvTable.html("");
-//     dvTable.append(table);
+    autocomplete(document.getElementById("author"), authors);
+})  

@@ -1,0 +1,9 @@
+$(document).ready(()=>{
+    document.querySelectorAll(".author-link").forEach((item)=>{
+        item.addEventListener('click',(event)=>{
+            event.preventDefault();
+            console.log(item.innerHTML);
+            window.location.href=`../author/${item.innerHTML}`
+        })
+    })
+})

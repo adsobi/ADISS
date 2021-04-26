@@ -91,7 +91,7 @@ def generateGenreChart():
     """)
     sparql.setReturnFormat(JSON)
     result = sparql.query().convert()
-    pprint(result)
+    #pprint(result)
     RET = {}
     for hit in result["results"]["bindings"]:
         RET[hit["GENRE"]["value"]] = hit["BOOKS"]["value"]
@@ -131,7 +131,26 @@ def generateCountryOfOriginChart(param):
         RET[hit["out"]["value"]] = hit["BOOKS"]["value"]
     return RET
 
-
+def generateListOfAllCountry():
+    #gets you 1 column full of authors
+    sparql = SPARQLWrapper("http://dbpedia.org/sparql")
+    sparql.setQuery("""
+            select distinct ?country
+            where {
+            ?book rdf:type <http://schema.org/Book>;
+            <http://dbpedia.org/ontology/country> ?country
+            }
+        """)
+    sparql.setReturnFormat(JSON)
+    result = sparql.query().convert()
+    RET = []
+    for hit in result["results"]["bindings"]:
+        tmp = hit["country"]["value"]
+        tmp = tmp.replace("http://dbpedia.org/resource/","")
+        tmp = tmp.replace("_"," ")
+        RET.append(tmp)
+    return RET
+#pprint(generateListOfAllCountry())
 def generateListOfAllAuthors():
     #gets you 1 column full of authors
     sparql = SPARQLWrapper("http://dbpedia.org/sparql")
@@ -183,8 +202,8 @@ def findBookOfAuthor(author):
         genreList = genreList.replace("http://dbpedia.org/resource/", "")
         genreList = genreList.replace("_", " ")
         RET[title] = genreList
-    pprint(result)
-    return result
+    pprint(RET)
+    return RET
 
 #findBookOfAuthor("Lemony Snicket")
 
@@ -212,7 +231,7 @@ def getListOfCountriesAndNumberOfBooks():
         RET[country] = numb
     return RET
 
-#pprint(getListOfCountriesAndNumberOfBooks())
+# pprint(getListOfCountriesAndNumberOfBooks())
 
 def getAuthorsAndNumberOfTheirBooks():
     #gets you 2 columns: author and total number of their books
@@ -239,3 +258,131 @@ def getAuthorsAndNumberOfTheirBooks():
     return RET
 
 #pprint(getAuthorsAndNumberOfTheirBooks())
+
+def getListOfCountriesAndNumberOfBooksInGenre(desiredGenre):
+    #gets you 2 columns: countries and total number of books from there
+    sparql = SPARQLWrapper("http://dbpedia.org/sparql")
+    query = """
+    select ?country count(?country) as ?numberOfBooks
+    where {
+    ?book rdf:type <http://schema.org/Book>;
+    <http://dbpedia.org/property/country> ?country;
+    <http://dbpedia.org/property/genre> ?genre.FILTER
+     regex(?genre, "insertGenreHere","i") . 
+    FILTER(LANGMATCHES(LANG(?country), 'en'))
+    OPTIONAL{?country foaf:name ?commonName.} .
+        BIND(IF(exists{?country foaf:name ?commonName},
+        ?commonName,?country) AS ?out)
+    } group by ?country
+    """
+    query = query.replace("insertGenreHere",desiredGenre)
+    sparql.setQuery(query)
+    sparql.setReturnFormat(JSON)
+    result = sparql.query().convert()
+    RET = {}
+    for hit in result["results"]['bindings']:
+        country = hit["country"]["value"]
+        numb = hit["numberOfBooks"]["value"]
+        RET[country] = numb
+    return RET
+
+#pprint(getListOfCountriesAndNumberOfBooksInGenre("comedy"))
+
+def getListOfAuthorsAndTheirAbstracts():
+    # gets you 2 columns: authors and their abstracts
+    sparql = SPARQLWrapper("http://dbpedia.org/sparql")
+    query = """
+            select ?author (count(?book) as ?numberOfBooks) ?abstract
+            where{
+            ?book a <http://schema.org/Book> .
+            ?book <http://dbpedia.org/property/author> ?author .
+            ?author <http://dbpedia.org/ontology/abstract> ?abstract . 
+            FILTER(LANGMATCHES(LANG(?abstract), 'en'))
+            } group by ?author ?abstract LIMIT 1000
+        """
+    sparql.setQuery(query)
+    sparql.setReturnFormat(JSON)
+    result = sparql.query().convert()
+    RET = {}
+    for hit in result["results"]['bindings']:
+        author = hit["author"]["value"]
+        author = author.replace("http://dbpedia.org/resource/","")
+        author = author.replace("_"," ")
+        author = author.replace("@en", "")
+        abstract = hit["abstract"]["value"]
+        abstract = abstract.replace("@en", "")
+        numberOfBook = hit["numberOfBooks"]["value"]
+        RET[author] = {"numberOfBook": numberOfBook, "abstract": abstract}
+    return RET
+
+#pprint(getListOfAuthorsAndTheirAbstracts())
+
+def getAllBooksWithAuthorForCountry(origin):
+    origin = origin.replace(" ","_")
+    sparql = SPARQLWrapper("http://dbpedia.org/sparql")
+    query = """
+        select distinct ?out ?name
+        where {
+        ?book a <http://schema.org/Book> .
+        ?book <http://dbpedia.org/property/country> ?country .
+        FILTER(LANGMATCHES(LANG(?country), 'en')) . 
+        ?country bif:contains "insertNameHere" .
+        ?book <http://dbpedia.org/property/name> ?name .
+        ?book <http://dbpedia.org/property/author> ?author .
+        optional {?author foaf:name ?aname . } .
+        bind (if (exists {?author foaf:name ?aname . }, ?aname, ?author) as ?out)}
+    """
+    query = query.replace("insertNameHere", origin)
+    sparql.setQuery(query)
+    sparql.setReturnFormat(JSON)
+    result = sparql.query().convert()
+    RET = {}
+    for hit in result["results"]['bindings']:
+        author = hit["name"]["value"]
+        author = author.replace("http://dbpedia.org/resource/", "")
+        author = author.replace("_", " ")
+        author = author.replace("@en", "")
+        abstract = hit["out"]["value"]
+        abstract = abstract.replace("@en", "")
+        abstract = abstract.replace("http://dbpedia.org/resource/", "")
+        RET[author] = abstract
+    return RET
+pprint(getAllBooksWithAuthorForCountry("Australian"))
+
+"""
+select ?author (count(?book) as ?numberOfBooks) ?abstract
+            where{
+            ?book a <http://schema.org/Book> .
+            ?book <http://dbpedia.org/property/author> ?author .
+            ?author <http://dbpedia.org/ontology/abstract> ?abstract . 
+            FILTER(LANGMATCHES(LANG(?abstract), 'en'))
+            } group by ?author ?abstract
+"""
+
+"""
+select distinct ?out ?name
+    where {
+    ?book a <http://schema.org/Book> .
+    ?book <http://dbpedia.org/property/country> ?country .
+    FILTER(LANGMATCHES(LANG(?country), 'en')) . 
+    ?country bif:contains "United_States" .
+    ?book <http://dbpedia.org/property/name> ?name .
+    ?book <http://dbpedia.org/property/author> ?author .
+    optional {?author foaf:name ?aname . } .
+    bind (if (exists {?author foaf:name ?aname . }, ?aname, ?author) as ?out)
+    }
+    """
+
+"""
+select distinct ?out ?name
+    where {
+    ?book a <http://schema.org/Book> .
+    ?book <http://dbpedia.org/property/country> ?country .
+    FILTER(LANGMATCHES(LANG(?country), 'en')) . 
+    ?country bif:contains "United_States" .
+    ?book <http://dbpedia.org/property/name> ?name .
+    ?book <http://dbpedia.org/property/author> ?author .
+    optional {?author foaf:name ?aname . } .
+    bind (if (exists {?author foaf:name ?aname . }, ?aname, ?author) as ?out)
+    }
+"""

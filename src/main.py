@@ -7,38 +7,43 @@ app.config['DEBUG'] = True
 
 # main page
 
-
 @app.route('/')
 def index():
     return render_template('index.html', 
                             genres=sparql.generateGenreChart(),
-                            authors=sparql.generateListOfAllAuthors())
-                            # countries=jsonify("data": sparql.generateCountryOfOriginChart))
+                            authors=sparql.generateListOfAllAuthors(),
+                            countries=sparql.generateListOfAllCountry())
 
 @app.route('/countries')
 def countries():
-    return render_template('countries.html')
+    return render_template('countries.html', 
+                            countries=sparql.getListOfCountriesAndNumberOfBooks())
 
 @app.route('/authors')
 def authors():
-    return render_template('authors.html')
+    return render_template('authors.html',
+                            authors=sparql.getListOfAuthorsAndTheirAbstracts())
 
 @app.route('/country/<name>')
 def country(name):
     return render_template('country.html',
-                            country="List of authors and num of book in selected country")
+                            country=name,
+                            list=sparql.getAllBooksWithAuthorForCountry(name),
+                            countries=sparql.generateListOfAllCountry())
 
 @app.route('/author/<name>')
 def author(name):
-    print(name)
     return render_template('author.html',
                             author=sparql.findBookOfAuthor(name.replace(" ", "_")),
+                            authors=sparql.generateListOfAllAuthors(),
                             name=name)
 
 @app.route('/genre/<name>')
 def getGenre(name):
-    return render_template('country.html',
-                           countries=sparql.generateCountryOfOriginChart(name))
+    return render_template('genre.html',
+                           countries=sparql.generateCountryOfOriginChart(name),
+                           name=name,
+                           list=sparql.getListOfCountriesAndNumberOfBooksInGenre(name))
 
 # example method if we will use ajax
 
@@ -58,9 +63,10 @@ def chart():
     return jsonify({"chart": sparql.generateChart()})
 
 
-@app.route('/:api/getDoughnutChart', methods=['GET'])
-def doughnutChart():
-    return jsonify({"chart": sparql.generateGenreChart()})
+@app.route('/:api/getListOfCountriesAndNumberOfBooks', methods=['GET'])
+def countriesList():
+    return jsonify({"list": sparql.getListOfCountriesAndNumberOfBooks()})
+
 
 # page loa
 

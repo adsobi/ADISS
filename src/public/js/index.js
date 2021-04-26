@@ -20,7 +20,7 @@ $(document).ready(()=>{
         type: 'doughnut',
         data,
         options: {
-            responsive: true,
+            responsive: false,
             'onClick': function(evt, item){
                 let indexOfElem = item[0].index;
                 let nameOfElem = Object.keys(genres)[indexOfElem];
@@ -30,7 +30,7 @@ $(document).ready(()=>{
                 legend: {
                     labels: {
                         font: {
-                            size: 18
+                            size: 16
                         }
                     }
                 }
