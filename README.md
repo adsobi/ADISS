@@ -1,12 +1,13 @@
 # Intro
 Hello, my dears.
 Before you start doing something you should 'pousz' this commands into your terminal and click enter.
-
-`cd ADISS`
-`. venv/bin/activate`
-`export FLASK_APP=./src/main.py`
-`export FLASK_ENV=development`
-`flask run`
+```
+cd ADISS
+. venv/bin/activate
+export FLASK_APP=./src/main.py
+export FLASK_ENV=development
+flask run
+```
 
 # About
 This project was created just to pass college classes.
