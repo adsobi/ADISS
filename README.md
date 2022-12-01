@@ -1,13 +1,18 @@
+# Intro
 Hello, my dears.
 Before you start doing something you should 'pousz' this commands into your terminal and click enter.
 
-cd ADISS
-. venv/bin/activate                     
-export FLASK_APP=./src/main.py
-export FLASK_ENV=development
-flask run 
+`cd ADISS`
+`. venv/bin/activate`
+`export FLASK_APP=./src/main.py`
+`export FLASK_ENV=development`
+`flask run`
 
-Short description what happens:
+# About
+This project was created just to pass college classes.
+In project required was to use SPARQL for make a queries do resources.
+
+# Short description what happens:
 Go to folder containing project, then activate virtual enviromental.
 In next step you should export enviromental variables and start server
 
